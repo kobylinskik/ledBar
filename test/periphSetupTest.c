@@ -11,18 +11,18 @@ void setUp(void) {
 }
 
 void tearDown(void) {
-    free(testRccApb2Enr);
-    free(testGpioaCrl);
-    free(testGpioaOdr);
+  free(testRccApb2Enr);
+  free(testGpioaCrl);
+  free(testGpioaOdr);
 }
 
-void test_enableApb2Bus(void) {
+void shouldEnableApb2Bus(void) {
   uint32_t * apb2BusEnReg = RCC_APB2ENR;
   enableApb2Bus();
   TEST_ASSERT_BIT_HIGH(2, *apb2BusEnReg);
 }
 
-void test_Pa5Output(void) {
+void shouldSetPa5ToOutput(void) {
   uint32_t * gpioACrl = GPIOA_CRL;
   setPinToOutputMode(5);
   uint32_t bitMask = (1<<20) | (1<<21) | (1<<22) | (1<<23);
@@ -30,7 +30,7 @@ void test_Pa5Output(void) {
   TEST_ASSERT_BITS(bitMask, expectedResult, *gpioACrl);
 }
 
-void test_LedOn(void) {
+void shouldSwitchLed5On(void) {
   uint32_t * gpioaOdr = GPIOA_ODR;
   switchOnLed();
   TEST_ASSERT_BIT_HIGH(5, *gpioaOdr);
@@ -38,8 +38,8 @@ void test_LedOn(void) {
 
 int main(void) {
   UNITY_BEGIN();
-  RUN_TEST(test_enableApb2Bus);
-  RUN_TEST(test_Pa5Output);
-  RUN_TEST(test_LedOn);
+  RUN_TEST(shouldEnableApb2Bus);
+  RUN_TEST(shouldSetPa5ToOutput);
+  RUN_TEST(shouldSwitchLed5On);
   return UNITY_END();
 }
