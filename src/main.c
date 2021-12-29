@@ -4,12 +4,24 @@
 #include "ledBarDriver.h"
 
 int main(void) {
-  uint32_t leds [1];
-  leds[0] = 5;
+  uint8_t leds [4] = {6, 7, 9, 8};
   enableApb2Bus();
-  setPinToOutputMode(5);
-  setLeds(leds, 1, 1);
+  setPinsToOutputMode(leds, 4);
   while (1) {
-
+    for (uint32_t i = 0; i < 60000; i++) {
+      setLeds(leds, 4, 1);
+    }
+    for (uint32_t i = 0; i < 60000; i++) {
+      setLeds(leds, 4, 2);
+    }
+    for (uint32_t i = 0; i < 60000; i++) {
+      setLeds(leds, 4, 0);
+    }
+    for (uint32_t i = 0; i < 60000; i++) {
+      setLeds(leds, 4, 4);
+    }
+    for (uint32_t i = 0; i < 60000; i++) {
+      setLeds(leds, 4, 0);
+    }
   }
 }

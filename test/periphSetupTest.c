@@ -30,16 +30,22 @@ void shouldSetPa5ToOutput(void) {
   TEST_ASSERT_BITS(bitMask, expectedResult, *gpioACrl);
 }
 
-void shouldSwitchLed5On(void) {
-  uint32_t * gpioaOdr = GPIOA_ODR;
-  switchOnLed();
-  TEST_ASSERT_BIT_HIGH(5, *gpioaOdr);
+void shouldSetPa0To4ToOutput(void) {
+  uint32_t * gpioACrl = GPIOA_CRL;
+  uint8_t pins[5];
+  for (int i = 0; i < 5; i++) {
+    pins[i] = i;
+  }
+  setPinsToOutputMode(pins, 5);
+  uint32_t bitMask = 0xffff;
+  uint32_t expectedResult = 0x1111;
+  TEST_ASSERT_BITS(bitMask, expectedResult, *gpioACrl);
 }
 
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(shouldEnableApb2Bus);
   RUN_TEST(shouldSetPa5ToOutput);
-  RUN_TEST(shouldSwitchLed5On);
+  RUN_TEST(shouldSetPa0To4ToOutput);
   return UNITY_END();
 }

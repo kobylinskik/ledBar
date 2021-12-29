@@ -18,3 +18,9 @@ void setPinToOutputMode(uint8_t pinNumber) {
   *gpioACr &= ~((1<<(pinCnfOffset + 1)) | (1<<(pinCnfOffset + 2)) | (1<<(pinCnfOffset + 3)));
   *gpioACr |= (1<<(pinCnfOffset));
 }
+
+void setPinsToOutputMode(uint8_t * pins, uint8_t numberOfPins) {
+  for (uint8_t i = 0; i < numberOfPins; i++) {
+    setPinToOutputMode(pins[i]);
+  }
+}
