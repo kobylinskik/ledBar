@@ -11,4 +11,8 @@ void setLeds(uint8_t * leds, uint8_t ledsSize, uint8_t numberOfLeds){
       *gpioAOdr &= ~(1<<leds[i]);
     }
   }
-};
+}
+
+uint8_t getNumberOfLedsToSwitchOnFromAdcReading(uint8_t ledsSize, uint16_t valueFromAdc) {
+  return (ledsSize + 0.99) * valueFromAdc / ADC_MAX_VAL;
+}

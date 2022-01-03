@@ -5,6 +5,7 @@
 #include "ledBarDriver.h"
 
 uint8_t leds[6];
+uint8_t ledsSize = 6;
 
 void setUp(void) {
   testGpioaOdr = calloc(1, sizeof(uint32_t));
@@ -50,9 +51,39 @@ void shouldSwitchOnFiveLedsAndThenOne(void) {
   TEST_ASSERT_BITS(testedBits, expectedBits, *gpioAOdr);
 }
 
+void shouldReturnZeroWhenAdcReadingIsZero(void) {
+  uint8_t numberOfLedsToSwitchOn = getNumberOfLedsToSwitchOnFromAdcReading(ledsSize, 0);
+  TEST_ASSERT_EQUAL_UINT8(0, numberOfLedsToSwitchOn);
+}
+
+void shouldReturnSixWhenAdcReadingIsMax(void) {
+  uint8_t numberOfLedsToSwitchOn = getNumberOfLedsToSwitchOnFromAdcReading(ledsSize, ADC_MAX_VAL);
+  TEST_ASSERT_EQUAL_UINT8(6, numberOfLedsToSwitchOn);
+}
+
+void shouldReturnTwoWhenAdcReadingIsOneThirdOfMax(void) {
+  uint8_t numberOfLedsToSwitchOn = getNumberOfLedsToSwitchOnFromAdcReading(ledsSize, ADC_MAX_VAL / 3);
+  TEST_ASSERT_EQUAL_UINT8(2, numberOfLedsToSwitchOn);
+}
+
+void shouldReturnOneWhenAdcReadingIsOneFourthOfMax(void) {
+  uint8_t numberOfLedsToSwitchOn = getNumberOfLedsToSwitchOnFromAdcReading(ledsSize, ADC_MAX_VAL / 4);
+  TEST_ASSERT_EQUAL_UINT8(1, numberOfLedsToSwitchOn);
+}
+
+void shouldReturnSixWhenAdcReadingIsAlmostMax(void) {
+  uint8_t numberOfLedsToSwitchOn = getNumberOfLedsToSwitchOnFromAdcReading(ledsSize, ADC_MAX_VAL / 1.05);
+  TEST_ASSERT_EQUAL_UINT8(6, numberOfLedsToSwitchOn);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(shouldSwitchOnTwoLeds);
   RUN_TEST(shouldSwitchOnFiveLedsAndThenOne);
+  RUN_TEST(shouldReturnZeroWhenAdcReadingIsZero);
+  RUN_TEST(shouldReturnSixWhenAdcReadingIsMax);
+  RUN_TEST(shouldReturnTwoWhenAdcReadingIsOneThirdOfMax);
+  RUN_TEST(shouldReturnOneWhenAdcReadingIsOneFourthOfMax);
+  RUN_TEST(shouldReturnSixWhenAdcReadingIsAlmostMax);
   return UNITY_END();
 }

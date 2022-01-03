@@ -16,9 +16,9 @@ void tearDown(void) {
   free(testGpioaOdr);
 }
 
-void shouldEnableApb2Bus(void) {
+void shouldEnableGpioA(void) {
   uint32_t * apb2BusEnReg = RCC_APB2ENR;
-  enableApb2Bus();
+  enableGpioA();
   TEST_ASSERT_BIT_HIGH(2, *apb2BusEnReg);
 }
 
@@ -44,7 +44,7 @@ void shouldSetPa0To4ToOutput(void) {
 
 int main(void) {
   UNITY_BEGIN();
-  RUN_TEST(shouldEnableApb2Bus);
+  RUN_TEST(shouldEnableGpioA);
   RUN_TEST(shouldSetPa5ToOutput);
   RUN_TEST(shouldSetPa0To4ToOutput);
   return UNITY_END();
