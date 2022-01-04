@@ -14,5 +14,5 @@ void setLeds(uint8_t * leds, uint8_t ledsSize, uint8_t numberOfLeds){
 }
 
 uint8_t getNumberOfLedsToSwitchOnFromAdcReading(uint8_t ledsSize, uint16_t valueFromAdc) {
-  return (ledsSize + 0.99) * valueFromAdc / ADC_MAX_VAL;
+  return (ledsSize + 1) * (valueFromAdc - 1) / ADC_MAX_VAL;
 }
