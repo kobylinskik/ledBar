@@ -7,12 +7,19 @@
 void setUp(void) {
   testRccApb2Enr = calloc(1, sizeof(uint32_t));
   testGpioaCrl = calloc(1, sizeof(uint32_t));
+  testGpioaCrh = calloc(1, sizeof(uint32_t));
   testGpioaOdr = calloc(1, sizeof(uint32_t));
+
+  testGpioa = (POINTER_SIZED_INT_TYPE)testGpioaCrl;
+  testGpioCrlOffset = 0;
+  testGpioCrhOffset = (POINTER_SIZED_INT_TYPE)testGpioaCrh - testGpioa;
+  testGpioOdrOffset = (POINTER_SIZED_INT_TYPE)testGpioaOdr - testGpioa;
 }
 
 void tearDown(void) {
   free(testRccApb2Enr);
   free(testGpioaCrl);
+  free(testGpioaCrh);
   free(testGpioaOdr);
 }
 
@@ -23,8 +30,15 @@ void shouldEnableGpioA(void) {
 }
 
 void shouldSetPa5ToOutput(void) {
-  uint32_t * gpioACrl = GPIOA_CRL;
-  setPinToOutputMode(5);
+  pin_t pins[6];
+  uint8_t numberOfPins = 6;
+  for (uint8_t i = 0; i < numberOfPins; i++) {
+    pins[i].gpioBaseAddress = GPIOA;
+    pins[i].pinNumber = i + 8;
+  }
+
+  uint32_t * gpioACrl = GPIOA_CRH;
+  setPinToOutputMode(&pins[5]);
   uint32_t bitMask = (1<<20) | (1<<21) | (1<<22) | (1<<23);
   uint32_t expectedResult = (1<<20);
   TEST_ASSERT_BITS(bitMask, expectedResult, *gpioACrl);
@@ -32,11 +46,14 @@ void shouldSetPa5ToOutput(void) {
 
 void shouldSetPa0To4ToOutput(void) {
   uint32_t * gpioACrl = GPIOA_CRL;
-  uint8_t pins[5];
-  for (int i = 0; i < 5; i++) {
-    pins[i] = i;
+  pin_t pins[6];
+  uint8_t numberOfPins = 6;
+
+  for (uint8_t i = 0; i < numberOfPins; i++) {
+    pins[i].gpioBaseAddress = GPIOA;
+    pins[i].pinNumber = i;
   }
-  setPinsToOutputMode(pins, 5);
+  setPinsToOutputMode(pins, numberOfPins);
   uint32_t bitMask = 0xffff;
   uint32_t expectedResult = 0x1111;
   TEST_ASSERT_BITS(bitMask, expectedResult, *gpioACrl);

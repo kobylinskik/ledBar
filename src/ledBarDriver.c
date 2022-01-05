@@ -1,14 +1,16 @@
 #include <stdint.h>
 #include "ledBarDriver.h"
 #include "peripherals.h"
+#include<stdio.h>
 
-void setLeds(uint8_t * leds, uint8_t ledsSize, uint8_t numberOfLeds){
-  uint32_t * gpioAOdr = GPIOA_ODR;
-  for (uint8_t i = 0; i < ledsSize; i++) {
-    if (i < numberOfLeds) {
-      *gpioAOdr |= 1<<leds[i];
+void setPins(volatile pin_t * pins, uint8_t pinsSize, uint8_t numberOfPins){
+  for (uint8_t i = 0; i < pinsSize; i++) {
+    pin_t pin = pins[i];
+    uint32_t * gpioOdr = (uint32_t *)(pin.gpioBaseAddress + GPIO_ODR_OFFSET);
+    if (i < numberOfPins) {
+      *gpioOdr |= 1<<pins[i].pinNumber;
     } else {
-      *gpioAOdr &= ~(1<<leds[i]);
+      *gpioOdr &= ~(1<<pins[i].pinNumber);
     }
   }
 }

@@ -15,32 +15,32 @@ void enableAdc1(void) {
   *apb2Enr |= (1<<9);
 }
 
-void setPinToOutputMode(uint8_t pinNumber) {
-  volatile uint32_t * gpioACr;
-  if (pinNumber < 8) {
-    gpioACr = GPIOA_CRL;
+void setPinToOutputMode(pin_t * pin) {
+  volatile uint32_t * gpioCr;
+  if (pin->pinNumber < 8u) {
+    gpioCr = (uint32_t *)((POINTER_SIZED_INT_TYPE)(pin->gpioBaseAddress)+GPIO_CRL_OFFSET);
   } else {
-    gpioACr = GPIOA_CRH;
+    gpioCr = (uint32_t *)((POINTER_SIZED_INT_TYPE)(pin->gpioBaseAddress)+GPIO_CRH_OFFSET);
   }
-  uint8_t pinCnfOffset = (pinNumber % 8)*4;
-  *gpioACr &= ~((1<<(pinCnfOffset + 1)) | (1<<(pinCnfOffset + 2)) | (1<<(pinCnfOffset + 3)));
-  *gpioACr |= (1<<(pinCnfOffset));
+  uint8_t pinCnfOffset = (pin->pinNumber % 8)*4;
+  *gpioCr &= ~((1<<(pinCnfOffset + 1)) | (1<<(pinCnfOffset + 2)) | (1<<(pinCnfOffset + 3)));
+  *gpioCr |= (1<<(pinCnfOffset));
 }
 
-void setPinToAnalogInput(uint8_t pinNumber) {
-  volatile uint32_t * gpioACr;
-  if (pinNumber < 8) {
-    gpioACr = GPIOA_CRL;
+void setPinToAnalogInput(pin_t * pin) {
+  volatile uint32_t * gpioCr;
+  if (pin->pinNumber < 8u) {
+    gpioCr = (uint32_t *)(pin->gpioBaseAddress+GPIO_CRL_OFFSET);
   } else {
-    gpioACr = GPIOA_CRH;
+    gpioCr = (uint32_t *)(pin->gpioBaseAddress+GPIO_CRH_OFFSET);
   }
-  uint8_t pinCnfOffset = (pinNumber % 8)*4;
-  *gpioACr &= ~((1<<pinCnfOffset) | (1<<(pinCnfOffset + 1)) | (1<<(pinCnfOffset + 2)) | (1<<(pinCnfOffset + 3)));
+  uint8_t pinCnfOffset = (pin->pinNumber % 8)*4;
+  *gpioCr &= ~((1<<pinCnfOffset) | (1<<(pinCnfOffset + 1)) | (1<<(pinCnfOffset + 2)) | (1<<(pinCnfOffset + 3)));
 }
 
-void setPinsToOutputMode(uint8_t * pins, uint8_t numberOfPins) {
+void setPinsToOutputMode(pin_t * pins, uint8_t numberOfPins) {
   for (uint8_t i = 0; i < numberOfPins; i++) {
-    setPinToOutputMode(pins[i]);
+    setPinToOutputMode(&pins[i]);
   }
 }
 
